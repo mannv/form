@@ -85,6 +85,7 @@ class Form extends FormBuilder
 
     public function select(
         $name,
+        $labelValue = '',
         $list = [],
         $mandatory = false,
         $selected = null,
@@ -99,7 +100,7 @@ class Form extends FormBuilder
         return $this->formGroup($name, $label, $element);
     }
 
-    public function checkbox($name, $value = 1, $mandatory = false, $checked = null, $options = [])
+    public function checkbox($name, $labelValue = '', $value = 1, $mandatory = false, $checked = null, $options = [])
     {
         $this->setDefaultFormClass($options);
         $label = $this->makeLabel($name, !empty($labelValue) ? $labelValue : $name, $mandatory);
@@ -107,11 +108,96 @@ class Form extends FormBuilder
         return $this->formGroup($name, $label, $element);
     }
 
-    public function radio($name, $value = null, $mandatory = false, $checked = null, $options = [])
+    public function radio($name, $labelValue = '', $value = null, $mandatory = false, $checked = null, $options = [])
     {
         $this->setDefaultFormClass($options);
         $label = $this->makeLabel($name, !empty($labelValue) ? $labelValue : $name, $mandatory);
         $element = parent::radio($name, $value, $checked, $options);
         return $this->formGroup($name, $label, $element);
     }
+
+    public function groupCheckBox(
+        $name,
+        $labelValue = '',
+        $list = [],
+        $mandatory = false,
+        $checked = null,
+        $delimiter = null,
+        $bsCol = 0,
+        $options = []
+    ) {
+        if (empty($list)) {
+            return;
+        }
+        $this->setDefaultFormClass($options);
+        $label = $this->makeLabel($name, !empty($labelValue) ? $labelValue : $name, $mandatory);
+
+        $listHtml = [];
+        foreach ($list as $id => $value) {
+            $checkState = $this->getCheckboxCheckedState($name, $id, $checked);
+            if (is_array($checkState)) {
+                $checkState = in_array($id, $checkState);
+            }
+            $item = parent::checkbox($name . '[]', $id, $checkState);
+            $html = '<label class="normal-text"> ' . $item . ' ' . $value . '</label>';
+            if (!empty($delimiter)) {
+                $listHtml[] = $html;
+            } else {
+                $listHtml[] = '<div class="col-md-' . $bsCol . '">' . $html . '</div>';
+            }
+
+        }
+        if (!empty($delimiter)) {
+            $delimiter = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+            $outputHtml = implode($delimiter, $listHtml);
+        } else {
+            $outputHtml = '<div class="row">' . implode('', $listHtml) . '</div>';
+        }
+
+        return $this->formGroup($name, $label, $outputHtml);
+    }
+
+    public function groupRadio(
+        $name,
+        $labelValue = '',
+        $list = [],
+        $mandatory = false,
+        $checked = null,
+        $delimiter = null,
+        $bsCol = 0,
+        $options = []
+    ) {
+        if (empty($list)) {
+            return;
+        }
+        $this->setDefaultFormClass($options);
+        $label = $this->makeLabel($name, !empty($labelValue) ? $labelValue : $name, $mandatory);
+
+        $listHtml = [];
+
+        foreach ($list as $id => $value) {
+            $checkState = $this->getCheckboxCheckedState($name, $id, $checked);
+            if (is_array($checkState)) {
+                $checkState = in_array($id, $checkState);
+            }
+            $item = parent::radio($name, $id, $checkState);
+            $html = '<label class="normal-text"> ' . $item . ' ' . $value . '</label>';
+            if (!empty($delimiter)) {
+                $listHtml[] = $html;
+            } else {
+                $listHtml[] = '<div class="col-md-' . $bsCol . '">' . $html . '</div>';
+            }
+        }
+
+
+        if (!empty($delimiter)) {
+            $delimiter = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+            $outputHtml = implode($delimiter, $listHtml);
+        } else {
+            $outputHtml = '<div class="row">' . implode('', $listHtml) . '</div>';
+        }
+
+        return $this->formGroup($name, $label, $outputHtml);
+    }
+
 }
