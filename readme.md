@@ -16,6 +16,15 @@ $ composer require plum/form
 ```
 
 ## Usage
+in blade template
+
+```
+{!! Pform::open(['url' => '#', 'method' => 'POST']) !!}
+{!! Pform::text('name', 'Your name', true) !!}
+{!! Pform::email('email', 'Your email', true) !!}
+{!! Pform::password('password', 'Password', true) !!}
+{!! Pform::close() !!}
+```
 
 ## Change log
 
