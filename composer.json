@@ -37,7 +37,8 @@
                 "Plum\\Form\\FormServiceProvider"
             ],
             "aliases": {
-                "Form": "Plum\\Form\\Facades\\Form"
+                "Pform": "Plum\\Form\\Facades\\Form",
+                "Pmandatory": "Plum\\Form\\Facades\\Mandatory"
             }
         }
     }
