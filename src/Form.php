@@ -47,6 +47,11 @@ class Form extends FormBuilder
         return $this->makeElement($name, $labelValue, $mandatory, $value, $options);
     }
 
+    public function password($name, $labelValue = '', $mandatory = false, $value = null, $options = [])
+    {
+        return $this->makeElement($name, $labelValue, $mandatory, $value, $options);
+    }
+
     public function email($name, $labelValue = '', $mandatory = false, $value = null, $options = [])
     {
         return $this->makeElement($name, $labelValue, $mandatory, $value, $options);
