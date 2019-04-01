@@ -1,0 +1,44 @@
+{
+    "name": "plum/form",
+    "description": ":description",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "mannv",
+            "email": "anhmantk@gmail.com",
+            "homepage": "https://github.com/mannv"
+        }
+    ],
+    "homepage": "https://github.com/mannv/form",
+    "keywords": ["Laravel", "Form"],
+    "require": {
+        "illuminate/support": "~5",
+        "laravelcollective/html": "^5.8"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~7.0",
+        "mockery/mockery": "^1.1",
+        "orchestra/testbench": "~3.0",
+        "sempro/phpunit-pretty-print": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Plum\\Form\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Plum\\Form\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Plum\\Form\\FormServiceProvider"
+            ],
+            "aliases": {
+                "Form": "Plum\\Form\\Facades\\Form"
+            }
+        }
+    }
+}
