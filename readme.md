@@ -32,7 +32,7 @@ in blade template
 
 Output: 
 
-![Output](https://raw.githubusercontent.com/mannv/form/master/output.png)
+![Output](https://raw.githubusercontent.com/mannv/form/6a0782fadb435a7d985e62791b13f85ca5b9178d/output.png)
 
 ## Change log
 
