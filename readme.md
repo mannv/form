@@ -19,12 +19,20 @@ $ composer require plum/form
 in blade template
 
 ```
-{!! Pform::open(['url' => '#', 'method' => 'POST']) !!}
-{!! Pform::text('name', 'Your name', true) !!}
-{!! Pform::email('email', 'Your email', true) !!}
-{!! Pform::password('password', 'Password', true) !!}
+{!! Pform::open(['url' => route('bt.store'), 'id' => 'form-demo'], \App\Http\Requests\DemoRequest::class) !!}
+    {!! Pform::text('name', __('Your name')) !!}
+    {!! Pform::email('email', __('Your email')) !!}
+    {!! Pform::tel('phone_number', __('Your phone')) !!}
+    {!! Pform::url('url', __('Your Site')) !!}
+    {!! Pform::number('point', __('Point')) !!}
+    {!! Pform::textarea('description', __('Description')) !!}
+    {!! Pform::submit(__('Submit')) !!}
 {!! Pform::close() !!}
 ```
+
+Output: 
+
+![Drag Racing](Dragster.jpg)
 
 ## Change log
 
