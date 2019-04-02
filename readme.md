@@ -32,7 +32,7 @@ in blade template
 
 Output: 
 
-![Drag Racing](Dragster.jpg)
+![Output](https://raw.githubusercontent.com/mannv/form/master/output.png)
 
 ## Change log
 
