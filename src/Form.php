@@ -6,6 +6,48 @@ use Collective\Html\FormBuilder;
 
 class Form extends FormBuilder
 {
+    protected $mandatory = [];
+
+    /**
+     * Created by ManNV
+     * Description: get field mandatory from form request
+     * @param null $abstract
+     * @return array|void
+     */
+    private function makeFormMandatory($abstract = null) {
+        if(empty($abstract)) {
+            return;
+        }
+
+        $validate = new $abstract;
+        $rules = $validate->rules();
+        if (empty($rules)) {
+            return [];
+        }
+
+        foreach ($rules as $name => $rule) {
+            $listRule = $rule;
+            if (is_string($rule)) {
+                $listRule = explode('|', $rule);
+            }
+            if (in_array('required', $listRule)) {
+                $this->mandatory[$name] = true;
+            }
+        }
+    }
+
+    public function open(array $options = [], $abstract = null)
+    {
+        $this->makeFormMandatory($abstract);
+        return parent::open($options);
+    }
+
+    public function model($model, array $options = [], $abstract = null)
+    {
+        $this->makeFormMandatory($abstract);
+        return parent::model($model, $options);
+    }
+
     private function formGroup($name, $label, $element)
     {
         return view('pform::form_group', [
@@ -24,52 +66,52 @@ class Form extends FormBuilder
         }
     }
 
-    private function makeElement($name, $labelValue = '', $mandatory = false, $value = null, $options = [])
+    private function makeElement($name, $labelValue = '', $value = null, $options = [])
     {
         $elementType = debug_backtrace()[1]['function'];
         $this->setDefaultFormClass($options);
-        $label = $this->makeLabel($name, !empty($labelValue) ? $labelValue : $name, $mandatory);
+        $label = $this->makeLabel($name, !empty($labelValue) ? $labelValue : $name);
         $element = parent::$elementType($name, $value, $options);
         return $this->formGroup($name, $label, $element);
     }
 
-    private function makeLabel($name, $value, $mandatory = false)
+    private function makeLabel($name, $value)
     {
         $required = '';
-        if ($mandatory) {
+        if (isset($this->mandatory[$name])) {
             $required = ' <span class="mandatory">*</span>';
         }
         return $this->toHtmlString('<label for="' . $name . '">' . $value . $required . '</label>');
     }
 
-    public function text($name, $labelValue = '', $mandatory = false, $value = null, $options = [])
+    public function text($name, $labelValue = '', $value = null, $options = [])
     {
-        return $this->makeElement($name, $labelValue, $mandatory, $value, $options);
+        return $this->makeElement($name, $labelValue, $value, $options);
     }
 
-    public function password($name, $labelValue = '', $mandatory = false, $value = null, $options = [])
+    public function password($name, $labelValue = '', $value = null, $options = [])
     {
-        return $this->makeElement($name, $labelValue, $mandatory, $value, $options);
+        return $this->makeElement($name, $labelValue, $value, $options);
     }
 
-    public function email($name, $labelValue = '', $mandatory = false, $value = null, $options = [])
+    public function email($name, $labelValue = '', $value = null, $options = [])
     {
-        return $this->makeElement($name, $labelValue, $mandatory, $value, $options);
+        return $this->makeElement($name, $labelValue, $value, $options);
     }
 
-    public function tel($name, $labelValue = '', $mandatory = false, $value = null, $options = [])
+    public function tel($name, $labelValue = '', $value = null, $options = [])
     {
-        return $this->makeElement($name, $labelValue, $mandatory, $value, $options);
+        return $this->makeElement($name, $labelValue, $value, $options);
     }
 
-    public function number($name, $labelValue = '', $mandatory = false, $value = null, $options = [])
+    public function number($name, $labelValue = '', $value = null, $options = [])
     {
-        return $this->makeElement($name, $labelValue, $mandatory, $value, $options);
+        return $this->makeElement($name, $labelValue, $value, $options);
     }
 
-    public function url($name, $labelValue = '', $mandatory = false, $value = null, $options = [])
+    public function url($name, $labelValue = '', $value = null, $options = [])
     {
-        return $this->makeElement($name, $labelValue, $mandatory, $value, $options);
+        return $this->makeElement($name, $labelValue, $value, $options);
     }
 
     public function submit($value = null, $options = [])
@@ -78,40 +120,39 @@ class Form extends FormBuilder
         return parent::submit($value, $options);
     }
 
-    public function textarea($name, $labelValue = '', $mandatory = false, $value = null, $options = [])
+    public function textarea($name, $labelValue = '', $value = null, $options = [])
     {
-        return $this->makeElement($name, $labelValue, $mandatory, $value, $options);
+        return $this->makeElement($name, $labelValue, $value, $options);
     }
 
     public function select(
         $name,
         $labelValue = '',
         $list = [],
-        $mandatory = false,
         $selected = null,
         array $selectAttributes = [],
         array $optionsAttributes = [],
         array $optgroupsAttributes = []
     ) {
         $this->setDefaultFormClass($options);
-        $label = $this->makeLabel($name, !empty($labelValue) ? $labelValue : $name, $mandatory);
+        $label = $this->makeLabel($name, !empty($labelValue) ? $labelValue : $name);
         $element = parent::select($name, $list, $selected, $selectAttributes, $optionsAttributes,
             $optgroupsAttributes);
         return $this->formGroup($name, $label, $element);
     }
 
-    public function checkbox($name, $labelValue = '', $value = 1, $mandatory = false, $checked = null, $options = [])
+    public function checkbox($name, $labelValue = '', $value = 1, $checked = null, $options = [])
     {
         $this->setDefaultFormClass($options);
-        $label = $this->makeLabel($name, !empty($labelValue) ? $labelValue : $name, $mandatory);
+        $label = $this->makeLabel($name, !empty($labelValue) ? $labelValue : $name);
         $element = parent::checkbox($name, $value, $checked, $options);
         return $this->formGroup($name, $label, $element);
     }
 
-    public function radio($name, $labelValue = '', $value = null, $mandatory = false, $checked = null, $options = [])
+    public function radio($name, $labelValue = '', $value = null, $checked = null, $options = [])
     {
         $this->setDefaultFormClass($options);
-        $label = $this->makeLabel($name, !empty($labelValue) ? $labelValue : $name, $mandatory);
+        $label = $this->makeLabel($name, !empty($labelValue) ? $labelValue : $name);
         $element = parent::radio($name, $value, $checked, $options);
         return $this->formGroup($name, $label, $element);
     }
@@ -120,7 +161,6 @@ class Form extends FormBuilder
         $name,
         $labelValue = '',
         $list = [],
-        $mandatory = false,
         $checked = null,
         $delimiter = null,
         $bsCol = 0,
@@ -130,7 +170,7 @@ class Form extends FormBuilder
             return;
         }
         $this->setDefaultFormClass($options);
-        $label = $this->makeLabel($name, !empty($labelValue) ? $labelValue : $name, $mandatory);
+        $label = $this->makeLabel($name, !empty($labelValue) ? $labelValue : $name);
 
         $listHtml = [];
         foreach ($list as $id => $value) {
@@ -161,7 +201,6 @@ class Form extends FormBuilder
         $name,
         $labelValue = '',
         $list = [],
-        $mandatory = false,
         $checked = null,
         $delimiter = null,
         $bsCol = 0,
@@ -171,7 +210,7 @@ class Form extends FormBuilder
             return;
         }
         $this->setDefaultFormClass($options);
-        $label = $this->makeLabel($name, !empty($labelValue) ? $labelValue : $name, $mandatory);
+        $label = $this->makeLabel($name, !empty($labelValue) ? $labelValue : $name);
 
         $listHtml = [];
 
