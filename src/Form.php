@@ -14,8 +14,9 @@ class Form extends FormBuilder
      * @param null $abstract
      * @return array|void
      */
-    private function makeFormMandatory($abstract = null) {
-        if(empty($abstract)) {
+    private function makeFormMandatory($abstract = null)
+    {
+        if (empty($abstract)) {
             return;
         }
 
@@ -71,7 +72,11 @@ class Form extends FormBuilder
         $elementType = debug_backtrace()[1]['function'];
         $this->setDefaultFormClass($options);
         $label = $this->makeLabel($name, !empty($labelValue) ? $labelValue : $name);
-        $element = parent::$elementType($name, $value, $options);
+        if ($elementType == 'password') {
+            $element = parent::password($name, $options);
+        } else {
+            $element = parent::$elementType($name, $value, $options);
+        }
         return $this->formGroup($name, $label, $element);
     }
 
