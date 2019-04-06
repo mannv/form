@@ -3,10 +3,15 @@
 namespace Plum\Form;
 
 use Collective\Html\FormBuilder;
+use Illuminate\View\Factory;
 
 class Form extends FormBuilder
 {
     protected $mandatory = [];
+
+    protected $fromView = 'form_group';
+
+    protected $showMandatory = true;
 
     /**
      * Created by ManNV
@@ -37,21 +42,53 @@ class Form extends FormBuilder
         }
     }
 
+    private function validateJS($abstract, $formId)
+    {
+        $factory = app(Factory::class);
+        $factory->startPush('scripts');
+        $validateJS = \JsValidator::formRequest($abstract, '#' . $formId);
+        echo $validateJS;
+        $factory->stopPush();
+    }
+
+    private function initForm(&$options, $abstract = null)
+    {
+        if (!empty($abstract)) {
+            if (!isset($options['id']) | empty($options['id'])) {
+                $options['id'] = 'form_' . uniqid();
+            }
+
+            if (!in_array($options['id'], config('pform.skip_validate_js', []))) {
+                $this->validateJS($abstract, $options['id']);
+            }
+        }
+
+        if (isset($options['view']) && !empty($options['view'])) {
+            $this->fromView = $options['view'];
+        }
+
+        if (isset($options['hide_mandatory']) && !empty($options['hide_mandatory'])) {
+            $this->showMandatory = false;
+        }
+    }
+
     public function open(array $options = [], $abstract = null)
     {
+        $this->initForm($options, $abstract);
         $this->makeFormMandatory($abstract);
         return parent::open($options);
     }
 
     public function model($model, array $options = [], $abstract = null)
     {
+        $this->initForm($options, $abstract);
         $this->makeFormMandatory($abstract);
         return parent::model($model, $options);
     }
 
     private function formGroup($name, $label, $element)
     {
-        return view('pform::form_group', [
+        return view('plum::' . $this->fromView, [
             'name' => $name,
             'label' => $label,
             'element' => $element,
@@ -83,7 +120,7 @@ class Form extends FormBuilder
     private function makeLabel($name, $value)
     {
         $required = '';
-        if (isset($this->mandatory[$name])) {
+        if (isset($this->mandatory[$name]) && $this->showMandatory) {
             $required = ' <span class="mandatory">*</span>';
         }
         return $this->toHtmlString('<label for="' . $name . '">' . $value . $required . '</label>');
@@ -121,7 +158,9 @@ class Form extends FormBuilder
 
     public function submit($value = null, $options = [])
     {
-        $options['class'] = 'btn btn-primary';
+        if (!isset($options['class'])) {
+            $options['class'] = 'btn btn-primary';
+        }
         return parent::submit($value, $options);
     }
 

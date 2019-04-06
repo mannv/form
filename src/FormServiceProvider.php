@@ -22,7 +22,7 @@ class FormServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
         }
-        $this->loadViewsFrom(__DIR__ . '/views', 'pform');
+        $this->loadViewsFrom(__DIR__ . '/views', 'plum');
     }
 
     /**
@@ -32,7 +32,7 @@ class FormServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/form.php', 'pform');
+        $this->mergeConfigFrom(__DIR__.'/../config/pform.php', 'pform');
 
         // Register the service the package provides.
         $this->app->singleton('mandatory', function ($app) {
@@ -64,13 +64,13 @@ class FormServiceProvider extends ServiceProvider
     {
         // Publishing the configuration file.
         $this->publishes([
-            __DIR__.'/../config/form.php' => config_path('form.php'),
-        ], 'form.config');
+            __DIR__.'/../config/pform.php' => $this->app->configPath('pform.php')
+        ]);
 
         // Publishing the views.
         $this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/plum'),
-        ], 'pform');
+            __DIR__.'/views' => $this->app->resourcePath('views/vendor/plum')
+        ]);
 
         // Publishing assets.
         /*$this->publishes([
