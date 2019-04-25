@@ -156,6 +156,11 @@ class Form extends FormBuilder
         return $this->makeElement($name, $labelValue, $value, $options);
     }
 
+    public function file($name, $labelValue = '', $value = null, $options = [])
+    {
+        return $this->makeElement($name, $labelValue, $value, $options);
+    }
+
     public function submit($value = null, $options = [])
     {
         if (!isset($options['class'])) {
