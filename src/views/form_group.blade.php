@@ -2,6 +2,6 @@
     {!! $label !!}
     {!! $element !!}
     @if ($errors->has($name))
-        <span class="help-block">{{$errors->first($name)}}</span>
+        <span class="text-danger">{{$errors->first($name)}}</span>
     @endif
 </div>
