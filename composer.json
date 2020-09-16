@@ -17,12 +17,7 @@
         "barryvdh/laravel-ide-helper": "^2.6",
         "proengsoft/laravel-jsvalidation": "^2.4"
     },
-    "require-dev": {
-        "phpunit/phpunit": "~7.0",
-        "mockery/mockery": "^1.1",
-        "orchestra/testbench": "~3.0",
-        "sempro/phpunit-pretty-print": "^1.0"
-    },
+    "require-dev": {},
     "autoload": {
         "psr-4": {
             "Plum\\Form\\": "src/"
